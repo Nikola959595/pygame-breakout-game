@@ -45,7 +45,16 @@ class Paddle(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
         if self.rect.right > 1200:
-            self.rect.right = 1200        
+            self.rect.right = 1200
+
+class Button(pygame.sprite.Sprite):
+    def __init__(self, image, x, y):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect(midbottom = (x, y))
+
+    def is_click(self):
+        return pygame.mouse.get_pressed()[0] and self.rect.collidepoint(pygame.mouse.get_pos())                
 
 
                         
