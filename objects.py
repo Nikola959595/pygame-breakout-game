@@ -1,4 +1,6 @@
 import pygame
+import random
+import math
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, image, x, y):
@@ -16,6 +18,11 @@ class Ball(pygame.sprite.Sprite):
         self.speed_x = 5
         self.speed_y = -5
 
+    def set_random_direction(self):
+        angle = random.uniform(0, 1 * math.pi)
+        self.speed_x = 5 * math.cos(angle)
+        self.speed_y = -5 * math.sin(angle)   
+
     def update(self):
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
@@ -24,7 +31,6 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.top <= 0:
             self.speed_y = -self.speed_y
         if self.rect.bottom >= 600:
-            self.rect.midbottom = (600, 520)
             self.speed_x = 5
             self.speed_y = -5
             return False

@@ -1,4 +1,5 @@
 import pygame
+import math
 import sys
 from objects import Block, Ball, Paddle, Button
 
@@ -26,6 +27,7 @@ BALL_MOVING = False
 SCORE = 0
 LIVES = 3
 MAIN_MENU = True
+GAME_OVER = False
 
 
 #Image loads
@@ -34,6 +36,7 @@ ball_img = pygame.image.load("assets/ball.png")
 paddle_img = pygame.image.load("assets/paddle.png")
 start_img = pygame.image.load("assets/start.png")
 quit_img = pygame.image.load("assets/quit.png")
+main_menu_img = pygame.image.load("assets/main_menu.png")
 block_images = [
     pygame.image.load("assets/redblock.png"),
     pygame.image.load("assets/orangeblock.png"),
@@ -87,10 +90,11 @@ def handle_collisions():
             SCORE += 10 
 
 def update_game_state(keys):
-    global BALL_MOVING, LIVES
-    paddle_group.update(keys)
+    global BALL_MOVING, LIVES, GAME_OVER
+    if not GAME_OVER:
+        paddle_group.update(keys)
 
-    if not BALL_MOVING:
+    if not BALL_MOVING and not GAME_OVER:
         if keys[pygame.K_SPACE]:
             BALL_MOVING = True
 
@@ -98,6 +102,12 @@ def update_game_state(keys):
         if not ball.update():
             BALL_MOVING = False
             LIVES -= 1
+    if not BALL_MOVING:
+        ball.rect.x = paddle.rect.x + 70
+        ball.rect.y= paddle.rect.y - 20
+    if GAME_OVER:
+        draw_text("GAME OVER", text_font, (255, 0, 0), 450, 300) 
+        main_menu_group.draw(screen)                     
 
                                         
 #Paddle setup
@@ -113,6 +123,8 @@ start = Button(start_img, 600, 300)
 start_group = pygame.sprite.GroupSingle(start)
 _quit = Button(quit_img, 600, 400)
 quit_group = pygame.sprite.GroupSingle(_quit)
+main_menu = Button(main_menu_img, 640, 850)
+main_menu_group = pygame.sprite.GroupSingle(main_menu)
 
 #Blocks
 block_groups = []
@@ -139,18 +151,27 @@ while running:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    if start.is_click():
-        generate_level()
-        MAIN_MENU = False
-        BALL_MOVING = False
-        SCORE = 0
-        LIVES = 3
-        paddle.rect.midbottom = (600, 550)
-        ball.rect.midbottom = (600, 520)
-    if _quit.is_click():
-        pygame.quit()
-        sys.exit()
+    if MAIN_MENU:
+        if start.is_click():
+            generate_level()
+            GAME_OVER = False
+            MAIN_MENU = False
+            BALL_MOVING = False
+            SCORE = 0
+            LIVES = 3
+            paddle.rect.midbottom = (600, 550)
+            ball.rect.midbottom = (600, 520)
+    if MAIN_MENU:        
+        if _quit.is_click():
+           pygame.quit()
+           sys.exit()
+    if not MAIN_MENU and GAME_OVER:       
+        if main_menu.is_click() or keys[pygame.K_RETURN]:
+            MAIN_MENU = True    
     if keys[pygame.K_ESCAPE] == True:
-        MAIN_MENU = True        
+        MAIN_MENU = True
+    if LIVES <= 0:
+        GAME_OVER = True
+         
 
     pygame.display.update()                 
