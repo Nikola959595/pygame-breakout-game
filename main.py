@@ -1,5 +1,4 @@
 import pygame
-import math
 import sys
 from objects import Block, Ball, Paddle, Button
 
@@ -123,7 +122,7 @@ start = Button(start_img, 600, 300)
 start_group = pygame.sprite.GroupSingle(start)
 _quit = Button(quit_img, 600, 400)
 quit_group = pygame.sprite.GroupSingle(_quit)
-main_menu = Button(main_menu_img, 640, 850)
+main_menu = Button(main_menu_img, 590, 500)
 main_menu_group = pygame.sprite.GroupSingle(main_menu)
 
 #Blocks
@@ -161,11 +160,10 @@ while running:
             LIVES = 3
             paddle.rect.midbottom = (600, 550)
             ball.rect.midbottom = (600, 520)
-    if MAIN_MENU:        
         if _quit.is_click():
            pygame.quit()
            sys.exit()
-    if not MAIN_MENU and GAME_OVER:       
+    elif GAME_OVER:       
         if main_menu.is_click() or keys[pygame.K_RETURN]:
             MAIN_MENU = True    
     if keys[pygame.K_ESCAPE] == True:

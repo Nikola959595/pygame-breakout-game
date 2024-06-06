@@ -60,7 +60,9 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (x, y))
 
     def is_click(self):
-        return pygame.mouse.get_pressed()[0] and self.rect.collidepoint(pygame.mouse.get_pos())                
+        return pygame.mouse.get_pressed()[0] and self.rect.collidepoint(pygame.mouse.get_pos())
+
+                    
 
 
                         
